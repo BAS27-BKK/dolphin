@@ -1284,13 +1284,14 @@ void Renderer::UpdateWidescreenHeuristic()
 
   // Modify the threshold based on which aspect ratio we're already using:
   // If the game's in 4:3, it probably won't switch to anamorphic, and vice-versa.
-  static constexpr u32 TRANSITION_THRESHOLD = 3;
+  // By default, this value is 3.
+  const u32 transition_threshold = g_ActiveConfig.widescreen_heuristic_transition_threshold;
 
-  const auto looks_normal = [](auto& counts) {
-    return counts.normal_vertex_count > counts.anamorphic_vertex_count * TRANSITION_THRESHOLD;
+  const auto looks_normal = [transition_threshold](auto& counts) {
+    return counts.normal_vertex_count > counts.anamorphic_vertex_count * transition_threshold;
   };
-  const auto looks_anamorphic = [](auto& counts) {
-    return counts.anamorphic_vertex_count > counts.normal_vertex_count * TRANSITION_THRESHOLD;
+  const auto looks_anamorphic = [transition_threshold](auto& counts) {
+    return counts.anamorphic_vertex_count > counts.normal_vertex_count * transition_threshold;
   };
 
   const auto& persp = flush_statistics.perspective;
